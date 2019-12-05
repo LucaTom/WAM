@@ -14,7 +14,11 @@ import wam.server.serialize.UserDao;
 /**
  * Servlet implementation class RegisterServlet
  */
-@WebServlet("/RegisterServlet")
+@WebServlet(
+		description = "/RegisterServlet",
+		urlPatterns = {
+				"/Register",		
+				})
 public class RegisterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -42,12 +46,22 @@ public class RegisterServlet extends HttpServlet {
 		String nachname = request.getParameter("nachname");
 		String adresse = request.getParameter("adresse");
 		String mailadresse = request.getParameter("mailadresse");
-		int telefonnummer = Integer.parseInt(request.getParameter("telefonnummer"));
+		String telefonnummer = request.getParameter("telefonnummer");
 		String benutzername = request.getParameter("benutzername");
 		String passwort = request.getParameter("passwort");
 		
+		//bevor der neue User in der Datenbank gespeichert wird, wird erst überprüft, ob der ausgewählte Benutzername noch verfügbar ist
+		if (UserDao.instance.checkBenutzername(benutzername) == true) 
+		{
+		//der neue User wird in die Datenbank aufgenommen & auf die Loginseite weitergeleitet
 		User u = new User(-1, vorname, nachname, adresse, mailadresse, telefonnummer, benutzername, passwort);	
 		UserDao.instance.store(u);
 		response.sendRedirect("login.jsp");
+		}
+		else 
+		{
+		response.sendRedirect("registrieren.jsp");			
+		}
+	
 	}
 }

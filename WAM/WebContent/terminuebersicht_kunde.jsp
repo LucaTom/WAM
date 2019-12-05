@@ -6,44 +6,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+<jsp:include page="navbar.jsp"/>
 
 <style>
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
-  position: fixed;
-  top: 0;
-  width: 100%;
-}
-
-li {
-  float: left;
-  border-right:1px solid #bbb;
-}
-
-li:last-child {
-  border-right: none;
-}
-
-li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
-li a:hover:not(.active) {
-  background-color: #111;
-}
-
-.active {
-  background-color: #666;
-}
-
 table {
   border-collapse: collapse;
   width: 100%;
@@ -68,38 +33,56 @@ a.button {
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+
 <body>
-
-<ul>
-	<li><a class="active" href="terminuebersicht_kunde.jsp">Terminübersicht</a></li>
-	<li><a href="neuerTermin_kunde.jsp">Neuer Termin</a></li>
-	<li style="float:right"><a href="index.jsp">Ausloggen</a></li>
-</ul>
-</br>
-</br>
-</br>
-
+<br>
+<br>
+<br>
 <h2>deine Termine:</h2> <br>
-<form method="post" action="AppointmentServlet.java"> 
+ 
 <table>
   <tr>
-    <th>Wann:</th>
+    <th>Datum:</th>
+    <th>Uhrzeit:</th>
     <th>Was:</th>
-  <th>Status:</th>
+  	<th>Status:</th>
+ 	<th> </th>
   </tr>
-  <%int i = (Integer) session.getAttribute("idBenutzer");%>
+ <%int i = (Integer) session.getAttribute("idBenutzer");%>
   <% ArrayList<Appointment> appointments = AppointmentDao.instance.getAppointments(i); %>
-  <% for(int a=0;a<appointments.size();a++) { %>
+  <% for(Appointment a : appointments) { %>
+
   <tr>
-    <td> <%=appointments.get(a).datum%> </td>
-    <td> <%=appointments.get(a).frisur%> </td>
-    <td> <%=appointments.get(a).status%> </td>
+    <td> <%=a.datum%> </td>
+    <td> <%=a.uhrzeit.substring(0,5)%> </td>
+    <td> <%=a.frisur%> </td>
+    <td> 
+    <%	if (a.status.equals("angenommen")) {%> 
+		<input name=angenommen type=image value="angenommen"  src="gruener_punkt.png" width="15" height="15"> 
+	<%}if (a.status.equals("abgelehnt"))  { %>
+		<input name=abgelehnt type=image value="abgelehnt"  src="roter_punkt.png" width="15" height="15"> 
+  	<%}if (a.status.equals("offen"))  { %>
+		<input name=offen type=image value="offen"  src="grauer_punkt.png" width="15" height="15"> 
+ <% } %> </td>
+ <td>
+ <form method="post" action="Stornieren"> 
+ <%if (a.status.equals("angenommen") || a.status.equals("offen")){%>
+  	 	<input type=hidden name="idTermine" value="<%= a.idTermine %>"><button type="submit" name="stornieren" value="<%= a.idTermine %>">stornieren</button><%} %>  
+  	 	</form>
+ </td>
   </tr>
-  <% } %>
+  <%} %>
 </table>
 <br>
 <a href="neuerTermin_kunde.jsp" class="button">Neuer Termin</a>
-<button type="submit" name="terminStornieren" value="terminStornieren">Termin stornieren</button>
-</form>
+
+
+<br>
+<br>
+<img src="grauer_punkt.png" width="15" height="15"> : Status OFFEN (der Termin muss noch bearbeitet werden) <br>
+<img src="gruener_punkt.png"  width="15" height="15"> : Status ANGENOMMEN (der Termin wurde bearbeitet) <br>
+<img src="roter_punkt.png"  width="15" height="15"> : <a href="abgelehnteTermine_kunde.jsp" style="text-decoration: none; color:black " class="button">ABGELEHNTE Termine </a><br>  	
+ 
+
 </body>
 </html>

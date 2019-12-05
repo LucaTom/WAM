@@ -3,44 +3,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+<jsp:include page="navbar.jsp"/>
 
 <style>
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
-  position: fixed;
-  top: 0;
-  width: 100%;
-}
-
-li {
-  float: left;
-  border-right:1px solid #bbb;
-}
-
-li:last-child {
-  border-right: none;
-}
-
-li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
-li a:hover:not(.active) {
-  background-color: #111;
-}
-
-.active {
-  background-color: #666;
-}
-
 /* The container */
 .container {
   display: block;
@@ -104,28 +69,32 @@ li a:hover:not(.active) {
 	border-radius: 50%;
 	background: white;
 }
+p {
+	color: red;
+	font-size: 11px;
+}
 </style>
 
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
-
-<ul>
-	<li><a href="terminuebersicht_kunde.jsp">Terminübersicht</a></li>
-	<li><a class="active" href="neuerTermin_kunde.jsp">Neuer Termin</a></li>
-	<li style="float:right"><a href="index.jsp">Ausloggen</a></li>
-</ul>
 </br>
 </br>
 </br>
 
 <h2>neuer Termin:</h2> <br>
-wann? <br>
-<form action="AppointmentServlet" method="post">
-	<input name="datum" type=text placeholder="dd/mm/yyyy"> <br> 
+Öffnungszeiten: <br> <br>
+Mo-Fr: 	08:00 - 19:00 <br>
+Sa-So: 	geschlossen <br> <br> <br>
+Wann? <br><br>
+<form action="Appointment" method="post">
+	Datum:  <input name="datum" type=date min="2017-01-01" max="2022-12-31" required> 
+	Uhrzeit:  <input name="uhrzeit" type=time value="00:00" min="08:00" max="19:00" required> <br> 
+	
+<br><br>
 
-was?<br>
+Was?<br><br>
 <label class="container">Spitzen schneiden
   <input type="radio" checked="checked" name="frisur" value="Spitzen schneiden">
   <span class="checkmark"></span>
@@ -142,7 +111,7 @@ was?<br>
   <input type="radio" name="frisur" value="All-In Paket">
   <span class="checkmark"></span>
 </label>
-
+<p><%=request.getAttribute("error_msg")==null?"":request.getAttribute("error_msg") %></p>	
 <button name="anfrageAbschicken" value="anfrageAbschicken">Anfrage abschicken</button> <br>
 </form>
 </body>

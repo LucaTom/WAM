@@ -6,11 +6,11 @@ public class User {
 	public String nachname;
 	public String adresse;
 	public String mailadresse;
-	public int telefonnummer;
+	public String telefonnummer;
 	public String benutzername;
 	public String passwort;
 	
-	public User(int id, String vorname, String nachname, String adresse, String mailadresse, int telefonnummer,
+	public User(int id, String vorname, String nachname, String adresse, String mailadresse, String telefonnummer,
 			String benutzername, String passwort) {
 		super();
 		this.id = id;

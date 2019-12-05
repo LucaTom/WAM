@@ -8,13 +8,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mysql.fabric.xmlrpc.base.Value;
+
 import wam.server.serialize.User;
 import wam.server.serialize.UserDao;
 
 /**
  * Servlet implementation class RegisterServlet
  */
-@WebServlet("/LoginServlet")
+@WebServlet(
+		description = "/LoginServlet",
+		urlPatterns = {
+				"/Login",		
+				})
+
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -29,9 +36,19 @@ public class LoginServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
+    
+    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		String logout= request.getParameter("logout").toLowerCase().trim();
+		if ("1".equals(logout)) {
+			request.getSession().setAttribute("idBenutzer", null);
+			request.getSession().invalidate();
+			response.sendRedirect("index.jsp");
+			//response.getWriter().append("See you!");
+		}else {
+			//response.getWriter().append("Use the FORM");
+			response.sendRedirect("login.jsp");
+			} 
 	}
 
 	/**
@@ -41,14 +58,19 @@ public class LoginServlet extends HttpServlet {
 		String benutzername = request.getParameter("benutzername");
 		String passwort = request.getParameter("passwort");
 		
-		
 		if (UserDao.instance.auth(benutzername, passwort)) {
 			
 			request.getSession().setAttribute("idBenutzer",UserDao.instance.getid(benutzername));
 			
 			if (benutzername.equals("friseur") && passwort.equals("12345")){ 	
 				response.sendRedirect("terminuebersicht_friseur.jsp");
-			}else response.sendRedirect("terminuebersicht_kunde.jsp");
+			}else {
+				response.sendRedirect("terminuebersicht_kunde.jsp");
+			}
+		} else {
+			request.setAttribute("error_msg", "Benutzername oder Passwort sind falsch - Versuche es erneut!");
+			request.getRequestDispatcher("login.jsp").forward(request, response);
+			
 		}
 	}
 }

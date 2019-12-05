@@ -19,7 +19,8 @@ a.button {
 <body>
 Herzlich Willkommen! <br> 
 Jetzt registrieren & dann loslegen: <br>
-<form action="RegisterServlet" method="post">
+<form action="Register" method="post">
+
 	<input name="vorname" type="text" placeholder="Vorname" required> <br> 
 	<input name="nachname" type="text" placeholder="Nachname" required> <br> 
 	<input name="adresse" type="text" placeholder="Adresse" required> <br> 

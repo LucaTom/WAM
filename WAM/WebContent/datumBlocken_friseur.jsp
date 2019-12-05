@@ -3,43 +3,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+<jsp:include page="navbar.jsp"/>
+
 <style>
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
-  position: fixed;
-  top: 0;
-  width: 100%;
-}
-
-li {
-  float: left;
-  border-right:1px solid #bbb;
-}
-
-li:last-child {
-  border-right: none;
-}
-
-li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
-li a:hover:not(.active) {
-  background-color: #111;
-}
-
-.active {
-  background-color: #666;
-}
-
 table {
   border-collapse: collapse;
   width: 100%;
@@ -50,34 +16,40 @@ th, td {
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
+p {
+	color: red;
+	font-size: 9.5px;
+}
 </style>
 
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
-
-<ul>
-	<li><a href="terminuebersicht_friseur.jsp">Terminübersicht</a></li>
-	<li><a href="kundenuebersicht_friseur.jsp">Kundenübersicht</a></li>
-	<li><a class="active" href="datumBlocken_friseur.jsp">Datum blocken</a></li>
-	<li style="float:right"><a href="index.jsp">Ausloggen</a></li>
-</ul>
 </br>
 </br>
 </br>
 
 Regulär geblocked: <br> <br>
-Mo-Fr: 	00:00 - 8:59 || 18:01 - 23:59 <br>
+Mo-Fr: 	00:00 - 7:59 || 19:01 - 23:59 <br>
 Sa-So: 	00:00 - 23:59 <br> <br> <br>
 
 Irregulär geblocked: <br> <br>
 
+<form method="post" action="Blocken"> 
 
+Am: 
+ <input name="datum" type=date value="2019-12-24" min="2017-01-01" max="2022-12-31"required> <br> 
+von <input name="startzeit" type=time value="--:--" min="08:00" max="19:00" required> bis  <input name="endzeit" type=time value="--:--" min="08:00" max="19:00" required>
+
+ <br>
+ <p><%=request.getAttribute("error_msg")==null?"":request.getAttribute("error_msg") %></p>	
+	<button type="submit" name="blockieren" value="blockieren">Blocker setzen</button>
+</form>
 <br> <br> <br> <br>
 
-<button name="blockerSetzen" value="blockerSetzen">Blocker setzen</button>
-<button name="blockerLöschen" value="blockerLöschen">Blocker löschen</button>
+
+
 
 
 </body>

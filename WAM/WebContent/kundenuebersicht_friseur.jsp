@@ -1,45 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ page import="java.util.ArrayList" %>
+<%@ page import="wam.server.serialize.User" %>
+<%@ page import="wam.server.serialize.UserDao" %>
 <!DOCTYPE html>
 <html>
 <head>
+<jsp:include page="navbar.jsp"/>
 
 <style>
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
-  position: fixed;
-  top: 0;
-  width: 100%;
-}
-
-li {
-  float: left;
-  border-right:1px solid #bbb;
-}
-
-li:last-child {
-  border-right: none;
-}
-
-li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}
-
-li a:hover:not(.active) {
-  background-color: #111;
-}
-
-.active {
-  background-color: #666;
-}
 
 table {
   border-collapse: collapse;
@@ -57,20 +26,21 @@ th, td {
 <title>Insert title here</title>
 </head>
 <body>
-
-<ul>
-	<li><a href="terminuebersicht_friseur.jsp">Terminübersicht</a></li>
-	<li><a class="active" href="kundenuebersicht_friseur.jsp">Kundenübersicht</a></li>
-	<li><a href="datumBlocken_friseur.jsp">Datum blocken</a></li>
-	<li style="float:right"><a href="index.jsp">Ausloggen</a></li>
-</ul>
 </br>
 </br>
 </br>
 
 <h2>Kundenverzeichnis</h2> <br>
-
-
-
+<form method="post" action="User"> 
+<table>
+  <% ArrayList<User> user = UserDao.instance.getAll_Users(); %>
+  <% for(User u : user) { %>
+  <tr>
+    <td><a href="einzelkundenuebersicht_friseur.jsp?id=<%= u.id %>" style="text-decoration: none; color:black "><%= u.vorname %> <%= u.nachname%></a></td>
+  </tr>
+  <% } %>
+</table>
+<br>
+</form>
 </body>
 </html>
