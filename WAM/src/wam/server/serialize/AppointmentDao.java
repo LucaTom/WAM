@@ -20,6 +20,8 @@ public class AppointmentDao {
 		return null;
 	}*/
 	
+	//für neuerTermin_Kunde:
+	//BEVOR der Termin in die DB übergeben wird
 	public boolean checkAppointment(String datum, String uhrzeit) {
 		Connection con= null;
 		PreparedStatement ps = null;
@@ -32,12 +34,9 @@ public class AppointmentDao {
 			ps = con.prepareStatement("SELECT COUNT(*) FROM Termine WHERE datum =? and uhrzeit=? and NOT status = 'abgelehnt'");
 			ps.setString(1, datum);
 			ps.setString(2, (uhrzeit +":00"));
-	//die Datenbank gibt aus wieviele termine schon das selbe datum und die selbe uhrzeit habe. 
-	//Optimalerweise ist das Ergebnis = 0; andernfalls muss der Kunde einen anderen Termin wählen
 			
 			rs= ps.executeQuery();
 			rs.next();
-			
 			if (rs.getInt(1)==0) return true;
 			else return false;
 			
@@ -48,13 +47,15 @@ public class AppointmentDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			try {rs.close(); } catch(SQLException e) {};
-			try {ps.close(); } catch(SQLException e) {};
-			try {con.close(); } catch(SQLException e) {};
+			try { if(rs!=null) rs.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(ps!=null) ps.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(con!=null)con.close(); }  catch(Exception e) {e.printStackTrace();};
 		}
 		return false;
 
 	}
+	
+	//für neuerTermin_Kunde:
 	public void store(Appointment a) {
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -62,7 +63,7 @@ public class AppointmentDao {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = ContextListener.getDataSource().getConnection();
-			ps = con.prepareStatement("insert into termine (idBenutzer, datum, uhrzeit, frisur) values (?,?,?,?)"); 
+			ps = con.prepareStatement("insert into Termine (idBenutzer, datum, uhrzeit, frisur) values (?,?,?,?)"); 
 			
 			ps.setInt(1,a.idBenutzer);
 			ps.setString(2,a.datum);
@@ -76,11 +77,12 @@ public class AppointmentDao {
 			e.printStackTrace();
 		}
 		finally {
-			try {ps.close(); } catch(SQLException e) {};
-			try {con.close(); } catch(SQLException e) {};
+			try { if(ps!=null) ps.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(con!=null)con.close(); }  catch(Exception e) {e.printStackTrace();};
 		}
 	}
 	
+	//für Terminübersicht_Kunde:
 	public ArrayList<Appointment> getAppointments(int idBenutzer) {
 		ArrayList<Appointment> kunde_appointments = new ArrayList<>();
 		Connection con = null;
@@ -89,7 +91,7 @@ public class AppointmentDao {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = ContextListener.getDataSource().getConnection();
-			ps = con.prepareStatement("Select * from termine where idBenutzer = ? and NOT status = 'abgelehnt' ORDER BY datum DESC, uhrzeit ASC");
+			ps = con.prepareStatement("Select * from Termine where idBenutzer = ? and NOT status = 'abgelehnt' ORDER BY datum DESC, uhrzeit ASC");
 			
 			ps.setInt(1,idBenutzer);
 			
@@ -107,13 +109,14 @@ public class AppointmentDao {
 		
 			e.printStackTrace();
 		}finally {
-			try {rs.close(); } catch(SQLException e) {};
-			try {ps.close(); } catch(SQLException e) {};
-			try {con.close(); } catch(SQLException e) {};
+			try { if(rs!=null) rs.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(ps!=null) ps.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(con!=null)con.close(); }  catch(Exception e) {e.printStackTrace();};
 		}
 		return null;
 	}
 	
+	//für Terminübersicht_Friseur:
 	public ArrayList<Appointment> getAll_Appointments(){
 		ArrayList<Appointment> friseur_appointments = new ArrayList<>();
 		Connection con = null;
@@ -122,7 +125,7 @@ public class AppointmentDao {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = ContextListener.getDataSource().getConnection();
-			ps = con.prepareStatement("Select * from termine WHERE NOT status = 'abgelehnt' ORDER BY datum DESC, uhrzeit ASC");
+			ps = con.prepareStatement("Select * from Termine WHERE NOT status = 'abgelehnt' ORDER BY datum DESC, uhrzeit ASC");
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				Appointment b = new Appointment(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getString(5), rs.getString(6));
@@ -137,14 +140,15 @@ public class AppointmentDao {
 		
 			e.printStackTrace();
 		}finally {
-			try {rs.close(); } catch(SQLException e) {};
-			try {ps.close(); } catch(SQLException e) {};
-			try {con.close(); } catch(SQLException e) {};
+			try { if(rs!=null) rs.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(ps!=null) ps.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(con!=null)con.close(); }  catch(Exception e) {e.printStackTrace();};
 		}
 		return null;
 	}
 	
 
+	//für Einzelkundenübersicht_Friseur:
 	public ArrayList<Appointment> einzelkunde_appointments(int idBenutzer) {
 		ArrayList<Appointment> einzelkunde_appointments = new ArrayList<>();
 		Connection con = null;
@@ -172,14 +176,15 @@ public class AppointmentDao {
 		
 			e.printStackTrace();
 		}finally {
-			try {rs.close(); } catch(SQLException e) {};
-			try {ps.close(); } catch(SQLException e) {};
-			try {con.close(); } catch(SQLException e) {};
+			try { if(rs!=null) rs.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(ps!=null) ps.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(con!=null)con.close(); }  catch(Exception e) {e.printStackTrace();};
 		}
 		return null;
 	
 		}
 
+	//für abgelehnteTermine_Kunde:
 	public ArrayList<Appointment> abgelehnte_appointments(int idBenutzer) {
 		ArrayList<Appointment> kunde_appointments = new ArrayList<>();
 		Connection con = null;
@@ -188,7 +193,7 @@ public class AppointmentDao {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = ContextListener.getDataSource().getConnection();
-			ps = con.prepareStatement("Select * from termine where idBenutzer = ? and status = 'abgelehnt' ORDER BY datum DESC, uhrzeit ASC");
+			ps = con.prepareStatement("Select * from Termine where idBenutzer = ? and status = 'abgelehnt' ORDER BY datum DESC, uhrzeit ASC");
 			
 			ps.setInt(1,idBenutzer);
 			
@@ -206,13 +211,14 @@ public class AppointmentDao {
 		
 			e.printStackTrace();
 		}finally {
-			try {rs.close(); } catch(SQLException e) {};
-			try {ps.close(); } catch(SQLException e) {};
-			try {con.close(); } catch(SQLException e) {};
+			try { if(rs!=null) rs.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(ps!=null) ps.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(con!=null)con.close(); }  catch(Exception e) {e.printStackTrace();};
 		}
 		return null;
 	}
 	
+	//für abgelehnteTermine_Friseur:
 	public ArrayList<Appointment> abgelehnte_Allappointments() {
 		ArrayList<Appointment> friseur_appointments = new ArrayList<>();
 		Connection con = null;
@@ -221,7 +227,7 @@ public class AppointmentDao {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			con = ContextListener.getDataSource().getConnection();
-			ps = con.prepareStatement("Select * from termine WHERE status = 'abgelehnt' ORDER BY datum DESC, uhrzeit ASC");
+			ps = con.prepareStatement("Select * from Termine WHERE status = 'abgelehnt' ORDER BY datum DESC, uhrzeit ASC");
 			rs = ps.executeQuery();
 			while (rs.next()) {
 				Appointment b = new Appointment(rs.getInt(1),rs.getInt(2),rs.getString(3),rs.getString(4),rs.getString(5), rs.getString(6));
@@ -236,13 +242,14 @@ public class AppointmentDao {
 		
 			e.printStackTrace();
 		}finally {
-			try {rs.close(); } catch(SQLException e) {};
-			try {ps.close(); } catch(SQLException e) {};
-			try {con.close(); } catch(SQLException e) {};
+			try { if(rs!=null) rs.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(ps!=null) ps.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(con!=null)con.close(); }  catch(Exception e) {e.printStackTrace();};
 		}
 		return null;
 	}
 	
+	//für Appointment:
 	public Appointment getTerminById(int id) {
 		Connection con = null;
 		PreparedStatement ps = null;
@@ -257,13 +264,14 @@ public class AppointmentDao {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try { rs.close(); } catch(SQLException e) {e.printStackTrace(); }
-			try { ps.close(); } catch(SQLException e) {e.printStackTrace(); }
-			try { con.close(); } catch(SQLException e) {e.printStackTrace(); }
+			try { if(rs!=null) rs.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(ps!=null) ps.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(con!=null)con.close(); }  catch(Exception e) {e.printStackTrace();};
 		}
 		return null;
 	}
 	
+	//für Terminübersicht_Friseur:
 	public ArrayList<Appointment> getTerminByDate(String datum_filter) {
 		ArrayList<Appointment> filter_appointments = new ArrayList<>();
 		Connection con = null;
@@ -282,9 +290,9 @@ public class AppointmentDao {
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
-			try { rs.close(); } catch(SQLException e) {e.printStackTrace(); }
-			try { ps.close(); } catch(SQLException e) {e.printStackTrace(); }
-			try { con.close(); } catch(SQLException e) {e.printStackTrace(); }
+			try { if(rs!=null) rs.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(ps!=null) ps.close(); }  catch(Exception e) {e.printStackTrace();};
+			try { if(con!=null)con.close(); }  catch(Exception e) {e.printStackTrace();};
 		}
 		return null;
 	}

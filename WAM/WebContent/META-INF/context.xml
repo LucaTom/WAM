@@ -7,8 +7,28 @@
     
     <Parameter name="hostname" value="AxelsMacbookPro"
          override="false"/>
-
+	
     <Resource
+		name="jdbc/Terminbuchung"
+		auth="Container"
+		type="javax.sql.DataSource"
+		driverClassName="com.mysql.jdbc.Driver"
+		url="jdbc:mysql://database-firsttry.cknepo1czp7e.us-east-1.rds.amazonaws.com:3306/Terminbuchung?autoReconnect=true"
+		username="admin"
+		password="D5ja.9!_45i"
+		maxActive="10"
+		maxIdle="10"
+		
+		validationQuery="/* ping */"
+		testOnBorrow="true"
+		testWhileIdle="true"
+		timeBetweenEvictionRunsMillis="10000"
+		minEvictableIdleTimeMillis="60000"
+		
+		maxWait="-1" /> 
+	
+		<!-- 
+		<Resource
 		name="jdbc/Terminbuchung"
 		auth="Container"
 		type="javax.sql.DataSource"
@@ -26,6 +46,10 @@
 		minEvictableIdleTimeMillis="60000"
 		
 		maxWait="-1" />
+			 -->
+			 
+		<!-- 		url="jdbc:mysql://localhost:3306/Terminbuchung" -->
+		<!-- 		url="jdbc:mysql://database-firsttry.cknepo1czp7e.us-east-1.rds.amazonaws.com:3306/Terminbuchung?autoReconnect=true" -->
 
 </Context>
 

@@ -1,31 +1,30 @@
 package wam.server;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import wam.server.serialize.User;
+import wam.server.serialize.StornierenDao;
 import wam.server.serialize.UserDao;
 
 /**
- * Servlet implementation class RegisterServlet
+ * Servlet implementation class StornierenServlet
  */
 @WebServlet(
-		description = "/RegisterServlet",
+		description = "/StornierenServlet",
 		urlPatterns = {
-				"/Register",		
+				"/Stornieren",		
 				})
-public class RegisterServlet extends HttpServlet {
+public class StornierenServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RegisterServlet() {
+    public StornierenServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -42,26 +41,15 @@ public class RegisterServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String vorname = request.getParameter("vorname");
-		String nachname = request.getParameter("nachname");
-		String adresse = request.getParameter("adresse");
-		String mailadresse = request.getParameter("mailadresse");
-		String telefonnummer = request.getParameter("telefonnummer");
-		String benutzername = request.getParameter("benutzername");
-		String passwort = request.getParameter("passwort");
+		for(String s : request.getParameterValues("stornieren")) System.out.println(s);
 		
-		//Überpürfung, ob ausgewählter Benutzername noch verfügbar
-		if (UserDao.instance.checkBenutzername(benutzername) == true) 
-		{
-		//der neue User wird in die Datenbank aufgenommen & auf die Loginseite weitergeleitet
-		User u = new User(-1, vorname, nachname, adresse, mailadresse, telefonnummer, benutzername, passwort, 1);	
-		UserDao.instance.store(u);
-		response.sendRedirect("login.jsp");
-		}
-		else 
-		{
-		response.sendRedirect("registrieren.jsp");			
-		}
-	
+
+		String stornieren= request.getParameter("stornieren");
+		int idTermine = Integer.parseInt((String) request.getParameter("idTermine"));
+		System.out.println(idTermine);
+
+			StornierenDao.instance.stornieren(idTermine);
+
+	response.sendRedirect("terminuebersicht_kunde.jsp");
 	}
 }

@@ -3,6 +3,8 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="wam.server.serialize.Appointment" %>
 <%@ page import="wam.server.serialize.AppointmentDao" %>
+<%@ page import="wam.server.serialize.User" %>
+<%@ page import="wam.server.serialize.UserDao" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,7 +40,10 @@ a.button {
 <br>
 <br>
 <br>
-<h2>deine Termine:</h2> <br>
+<%int i = (Integer) session.getAttribute("idBenutzer");%>
+<% User u = UserDao.instance.User_name(i); %>
+<h1>Hallo <%=u.vorname %> <%=u.nachname %>,</h1>
+<h2>deine Termine sind:</h2> <br>
  
 <table>
   <tr>
@@ -48,7 +53,7 @@ a.button {
   	<th>Status:</th>
  	<th> </th>
   </tr>
- <%int i = (Integer) session.getAttribute("idBenutzer");%>
+
   <% ArrayList<Appointment> appointments = AppointmentDao.instance.getAppointments(i); %>
   <% for(Appointment a : appointments) { %>
 
@@ -66,7 +71,7 @@ a.button {
  <% } %> </td>
  <td>
  <form method="post" action="Stornieren"> 
- <%if (a.status.equals("angenommen") || a.status.equals("offen")){%>
+ <%if (a.status.equals("angenommen")){%>
   	 	<input type=hidden name="idTermine" value="<%= a.idTermine %>"><button type="submit" name="stornieren" value="<%= a.idTermine %>">stornieren</button><%} %>  
   	 	</form>
  </td>

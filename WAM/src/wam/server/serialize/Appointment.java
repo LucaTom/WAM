@@ -22,6 +22,8 @@ public class Appointment {
 		this.status = status;
 	}
 	
+	//anstelle von erneuter übergabe einzelner parameter wird das gesamte resultset übergeben 
+	//aus resultset wird das appointment initalisiert 
 	public Appointment(ResultSet rs) {
 		super();
 		try {

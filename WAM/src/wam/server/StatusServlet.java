@@ -1,31 +1,35 @@
 package wam.server;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import wam.server.serialize.User;
+import com.mysql.fabric.xmlrpc.base.Value;
+
+import jdk.jshell.Snippet.Status;
+//import wam.server.serialize.Status;
+import wam.server.serialize.StatusDao;
 import wam.server.serialize.UserDao;
 
 /**
- * Servlet implementation class RegisterServlet
+ * Servlet implementation class StatusServlet
  */
 @WebServlet(
-		description = "/RegisterServlet",
+		description = "/StatusServlet",
 		urlPatterns = {
-				"/Register",		
+				"/Status",		
 				})
-public class RegisterServlet extends HttpServlet {
+		
+public class StatusServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RegisterServlet() {
+    public StatusServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -42,26 +46,17 @@ public class RegisterServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String vorname = request.getParameter("vorname");
-		String nachname = request.getParameter("nachname");
-		String adresse = request.getParameter("adresse");
-		String mailadresse = request.getParameter("mailadresse");
-		String telefonnummer = request.getParameter("telefonnummer");
-		String benutzername = request.getParameter("benutzername");
-		String passwort = request.getParameter("passwort");
 		
-		//Überpürfung, ob ausgewählter Benutzername noch verfügbar
-		if (UserDao.instance.checkBenutzername(benutzername) == true) 
-		{
-		//der neue User wird in die Datenbank aufgenommen & auf die Loginseite weitergeleitet
-		User u = new User(-1, vorname, nachname, adresse, mailadresse, telefonnummer, benutzername, passwort, 1);	
-		UserDao.instance.store(u);
-		response.sendRedirect("login.jsp");
+
+		String status= request.getParameter("action");
+		int idTermine = Integer.parseInt((String) request.getParameter("idTermine"));
+
+		if (status.equals("angenommen")) {
+			StatusDao.instance.approve(idTermine);
+		}else {
+			StatusDao.instance.decline(idTermine);
 		}
-		else 
-		{
-		response.sendRedirect("registrieren.jsp");			
-		}
-	
+		response.sendRedirect("terminuebersicht_friseur.jsp");	
 	}
+
 }

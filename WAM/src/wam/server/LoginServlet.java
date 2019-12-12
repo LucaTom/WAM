@@ -59,10 +59,13 @@ public class LoginServlet extends HttpServlet {
 		String passwort = request.getParameter("passwort");
 		
 		if (UserDao.instance.auth(benutzername, passwort)) {
+			User u = UserDao.instance.getUserById(UserDao.instance.getid(benutzername));
+			request.getSession().setAttribute("idBenutzer",u.id);
+			request.getSession().setAttribute("usergroupid",u.usergroupid);
 			
-			request.getSession().setAttribute("idBenutzer",UserDao.instance.getid(benutzername));
 			
-			if (benutzername.equals("friseur") && passwort.equals("12345")){ 	
+			if (UserDao.instance.auth_Friseur(u)){
+				
 				response.sendRedirect("terminuebersicht_friseur.jsp");
 			}else {
 				response.sendRedirect("terminuebersicht_kunde.jsp");

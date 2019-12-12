@@ -1,31 +1,31 @@
 package wam.server;
 
 import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import wam.server.serialize.User;
-import wam.server.serialize.UserDao;
+import wam.server.serialize.Appointment;
+import wam.server.serialize.AppointmentDao;
 
 /**
- * Servlet implementation class RegisterServlet
+ * Servlet implementation class UserServlet
  */
 @WebServlet(
-		description = "/RegisterServlet",
+		description = "/UserServlet",
 		urlPatterns = {
-				"/Register",		
+				"/User",		
 				})
-public class RegisterServlet extends HttpServlet {
+
+public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public RegisterServlet() {
+    public UserServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -42,26 +42,18 @@ public class RegisterServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		int id = Integer.parseInt(request.getParameter("id"));
 		String vorname = request.getParameter("vorname");
 		String nachname = request.getParameter("nachname");
 		String adresse = request.getParameter("adresse");
 		String mailadresse = request.getParameter("mailadresse");
-		String telefonnummer = request.getParameter("telefonnummer");
+		int telefonnummer = Integer.parseInt(request.getParameter("telefonnummer"));
 		String benutzername = request.getParameter("benutzername");
 		String passwort = request.getParameter("passwort");
 		
-		//Überpürfung, ob ausgewählter Benutzername noch verfügbar
-		if (UserDao.instance.checkBenutzername(benutzername) == true) 
-		{
-		//der neue User wird in die Datenbank aufgenommen & auf die Loginseite weitergeleitet
-		User u = new User(-1, vorname, nachname, adresse, mailadresse, telefonnummer, benutzername, passwort, 1);	
-		UserDao.instance.store(u);
-		response.sendRedirect("login.jsp");
-		}
-		else 
-		{
-		response.sendRedirect("registrieren.jsp");			
-		}
-	
-	}
+		response.sendRedirect("kundenuebersicht_friseur.jsp");
+		
+	doGet(request, response);
+}
+
 }

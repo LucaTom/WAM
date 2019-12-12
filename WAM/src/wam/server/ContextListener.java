@@ -41,7 +41,12 @@ public class ContextListener implements ServletContextListener {
 		System.getProperties().setProperty("Dorg.apache.cxf.stax.allowInsecureParser", "1");
 		System.out.println("sys prop set");
 
-		dataSource = getDBConnection();
+		try{
+			dataSource = getDBConnection();
+		}catch (Throwable t) {
+			System.out.println("nevermind");
+			t.printStackTrace();
+		}
 	}
 	
 	private static DataSource getDBConnection() {
@@ -53,6 +58,7 @@ public class ContextListener implements ServletContextListener {
 			System.out.println("Database Connection created successfully");
 		} catch (NamingException e) {
 			e.printStackTrace();
+			System.out.println("Databases connection failed");
 		}
 		return ds;
 

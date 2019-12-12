@@ -62,9 +62,8 @@ Bitte bearbeite alle offenen Termine, indem du sie entweder "annimmst" oder "abl
     <td> <%=a.datum%> </td>
     <td> <%=a.uhrzeit.substring(0,5)%> </td>
      <form action="User" method="post">
-      <% ArrayList<User> user = UserDao.instance.User_name(a.idBenutzer); %>
-	  <% for(User u : user) { %>
-	  <td><%=u.vorname %> <%=u.nachname %> <% } %> </td> 
+      <% User u = UserDao.instance.User_name(a.idBenutzer); %>
+	  <td><%=u.vorname %> <%=u.nachname %> </td> 
 	</form>
     <td> <%=a.frisur%> </td>
     <td>
